@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>system.init("Happy Birthday, Maryam") 💜</title>
+
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --secondary: #c084fc;
+            --dark-bg: #0d0e15;
+            --card-bg: rgba(20, 20, 35, 0.65);
+            --border: rgba(192, 132, 252, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #1e1135 0%, var(--dark-bg) 70%);
+            color: #f3e8ff;
+            text-align: center;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* DEVELOPER TERMINAL WINDOW */
+        .terminal-window {
+            width: 90%;
+            max-width: 650px;
+            margin: 50px auto 30px auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(142, 68, 173, 0.2);
+            overflow: hidden;
+            animation: renderApp 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .terminal-header {
+            background: rgba(10, 10, 15, 0.8);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .terminal-title {
+            margin: 0 auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: #a78bfa;
+            letter-spacing: 1px;
+            transform: translateX(-16px);
+        }
+
+        .card-content {
+            padding: 35px 25px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            background: linear-gradient(to right, #fff, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .letter-text {
+            line-height: 1.9;
+            font-size: 16px;
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto;
+            color: #e2d5f3;
+            border-left: 2px solid rgba(192, 132, 252, 0.4);
+            padding-left: 20px;
+        }
+
+        .letter-text br {
+            content: "";
+            margin: 10px 0;
+            display: block;
+        }
+
+        .signature {
+            margin-top: 25px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* TEDDY BEAR ANIMATED COMPONENT */
+        .teddy-container {
+            margin: 40px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 500px;
+            position: relative;
+        }
+
+        /* Teddy Speaking Bubble */
+        .teddy-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px 25px;
+            color: #f3e8ff;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: bounce 3s infinite ease-in-out;
+            max-width: 85%;
+        }
+
+        .teddy-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.1) transparent;
+            display: block;
+            width: 0;
+        }
+
+        /* CSS Big Teddy */
+        .teddy {
+            width: 150px;
+            height: 150px;
+            position: relative;
+        }
+
+        .teddy-ear-left, .teddy-ear-right {
+            width: 45px;
+            height: 45px;
+            background: #a16207;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+        }
+        .teddy-ear-left { left: 10px; }
+        .teddy-ear-right { right: 10px; }
+
+        .teddy-ear-left::after, .teddy-ear-right::after {
+            content: '';
+            width: 25px;
+            height: 25px;
+            background: #fda4af;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .teddy-head {
+            width: 120px;
+            height: 110px;
+            background: #ca8a04;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 25px;
+            left: 15px;
+            box-shadow: inset -5px -5px 0px rgba(0,0,0,0.15);
+        }
+
+        .teddy-eye-left, .teddy-eye-right {
+            width: 12px;
+            height: 12px;
+            background: #0f172a;
+            border-radius: 50%;
+            position: absolute;
+            top: 45px;
+            animation: blink 4s infinite;
+        }
+        .teddy-eye-left { left: 35px; }
+        .teddy-eye-right { right: 35px; }
+
+        .teddy-snout {
+            width: 45px;
+            height: 35px;
+            background: #fef08a;
+            border-radius: 50%;
+            position: absolute;
+            top: 60px;
+            left: 38px;
+        }
+
+        .teddy-nose {
+            width: 16px;
+            height: 10px;
+            background: #0f172a;
+            border-radius: 40% 40% 50% 50%;
+            position: absolute;
+            top: 5px;
+            left: 14.5px;
+        }
+
+        .teddy-mouth {
+            width: 14px;
+            height: 8px;
+            border: 2px solid #0f172a;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            position: absolute;
+            top: 16px;
+            left: 15.5px;
+        }
+
+        /* PREMIUM BUTTON */
+        .cta-btn {
+            margin-top: 35px;
+            padding: 14px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.6);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* SECTION HEADINGS */
+        h2.section-title {
+            font-size: 20px;
+            margin: 50px 0 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            color: #a78bfa;
+            display: inline-block;
+            border-bottom: 1px dashed rgba(167, 139, 250, 0.4);
+            padding-bottom: 5px;
+        }
+
+        /* PROFESSIONAL IMAGE GRID */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery img:hover {
+            transform: scale(1.06) translateY(-5px);
+            border-color: var(--secondary);
+            box-shadow: 0 12px 20px rgba(142, 68, 173, 0.3);
+        }
+
+        /* FLOATING HEARTS */
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatUp 7s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        /* CUSTOM DEV CONSOLE MODAL */
+        .console-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 450px;
+            background: #090a0f;
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 100;
+            text-align: left;
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.2);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .console-modal.active {
+            display: block;
+            animation: renderApp 0.3s forwards;
+        }
+
+        .console-header {
+            color: #27c93f;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(39, 201, 63, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .console-json {
+            color: #a78bfa;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .close-console {
+            margin-top: 15px;
+            background: transparent;
+            border: 1px solid #22c55e;
+            color: #22c55e;
+            padding: 5px 15px;
+            cursor: pointer;
+            font-family: monospace;
+            border-radius: 4px;
+            float: right;
+        }
+
+        .close-console:hover {
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        /* LAYER ADJUSTMENT */
+        .terminal-window, h2, .gallery, .console-modal, .teddy-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ANIMATIONS */
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes renderApp {
+            to { transform: translate(0) scale(1); opacity: 1; }
+            from { transform: translateY(20px) scale(0.95); opacity: 0; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @media (max-width: 600px) {
+            .letter-text { font-size: 14px; padding-left: 15px; }
+            h1 { font-size: 22px; }
+            .gallery { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
+            .gallery img { height: 110px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TERMINAL WRAPPER FOR DEV VIBE -->
+    <div class="terminal-window">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="terminal-title">main.config / birthday_wish.sh</div>
+        </div>
+
+        <div class="card-content">
+            <h1>🎂 Happy Birthday My Sweetuuu 💜</h1>
+
+            <div class="letter-text">
+                Dear Khirred,<br><br>
+                Happy Birthday to the most beautiful person in my life.<br><br>
+                I still can't believe how lucky I am to have you.<br><br>
+                In just a few more days, we'll complete our first year together, and every single moment with you has been precious.<br><br>
+                You're not just my girlfriend...<br><br>
+                You're my Sweetuuu, my Jaan, my best friend, my comfort, and my future wife in my heart.<br><br>
+                No matter how far we are, I'll always choose you.<br><br>
+                Thank you for loving me.<br><br>
+                I hope today gives you every reason to smile.<br><br>
+                I love you more than words can ever explain.<br><br>
+                
+                <!-- NEW ENDING PARAGRAPH -->
+                As we step into another beautiful year of our lives, I promise to stand by you through every high and low. No distance can ever lessen the space you hold in my soul, and I look forward to building our forever, one heartbeat at a time. You are my finest blessing, today and for all the days to come.<br><br>
+                
+                <div class="signature">Forever Yours,<br>❤️ Aniket</div>
+            </div>
+
+            <button class="cta-btn" onclick="showLove()">
+                Execute Heart.exe 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- NEW INTERACTIVE TEDDY BEAR COMPONENT -->
+    <div class="teddy-container">
+        <div class="teddy-bubble" id="teddySpeech">
+            Tap me! I have some sweet terminal logs just for you! 🧸✨
+        </div>
+        <div class="teddy" onclick="teddySpeak()">
+            <div class="teddy-ear-left"></div>
+            <div class="teddy-ear-right"></div>
+            <div class="teddy-head">
+                <div class="teddy-eye-left"></div>
+                <div class="teddy-eye-right"></div>
+                <div class="teddy-snout">
+                    <div class="teddy-nose"></div>
+                    <div class="teddy-mouth"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">./assets/memories/</h2>
+
+    <div class="gallery">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0017.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0018.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0019.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0020.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0021.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0034.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0036.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0037.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0038.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0039.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0040.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0041.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0042.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0043.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0044.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0045.jpg" alt="Memory">
+        <img src="https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/IMG-20260709-WA0046.jpg" alt="Memory">
+    </div>
+
+    <h2 class="section-title">system.audio_player() 🎶</h2>
+    <audio id="bgMusic"></audio>
+
+    <!-- CUSTOM INTERACTIVE TERMINAL ALERT BOX -->
+    <div id="consoleModal" class="console-modal">
+        <div class="console-header">>_ response_log.json</div>
+        <div class="console-json" id="jsonOutput"></div>
+        <button class="close-console" onclick="closeConsole()">clear</button>
+    </div>
+
+    <script>
+        const songs = [
+            "https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/Lana Del Rey - Young and Beautiful.mp3",
+            "https://raw.githubusercontent.com/aniketsingh060714-png/happy-birthday-khirred-/main/Lana Del Rey - Brooklyn Baby (Official Audio).mp3"
+        ];
+
+        let index = 0;
+        const player = document.getElementById("bgMusic");
+
+        function playSong(i){
+            player.src = songs[i];
+            player.play().catch(err => console.log("Audio play deferred until interaction"));
+        }
+
+        player.addEventListener("ended", function(){
+            index = (index + 1) % songs.length;
+            playSong(index);
+        });
+
+        document.body.addEventListener("click", function () {
+            if(!player.src) playSong(index);
+        }, { once: true });
+
+        // UPGRADED INTERACTIVE POPUP (DEV LOOK)
+        function showLove(){
+            const modal = document.getElementById("consoleModal");
+            const jsonBox = document.getElementById("jsonOutput");
+            
+            const loveData = {
+                "status": 200,
+                "connection": "Stable & Infinite",
+                "message": "Out of billions of data points in the universe...",
+                "result": "I am officially the luckiest because I found you. ❤️",
+                "wish": "Happy Birthday My Sweetuuu! 💜",
+                "database_sync": "100% Core Memory Saved"
+            };
+
+            jsonBox.textContent = JSON.stringify(loveData, null, 2);
+            modal.classList.add("active");
+        }
+
+        function closeConsole(){
+            document.getElementById("consoleModal").classList.remove("active");
+        }
+
+        // TEDDY DIALOGUE SYSTEM
+        const teddyQuotes = [
+            "Aniket loves you more than JavaScript loves bugs! 💻❤️",
+            "Warning: System overload due to extreme cuteness! 📉😍",
+            "You are the CSS to his HTML, you keep him perfectly styled! ✨",
+            "Database Status: 1 Year Completed successfully! Loading forever... ⏳",
+            "Happy Birthday, Sweetuuu! May your console always be free of errors! 💜"
+        ];
+        let currentQuoteIndex = 0;
+
+        function teddySpeak() {
+            const bubble = document.getElementById("teddySpeech");
+            bubble.textContent = teddyQuotes[currentQuoteIndex];
+            currentQuoteIndex = (currentQuoteIndex + 1) % teddyQuotes.length;
+        }
+
+        // GENERATE FLOATING HEARTS AUTOMATICALLY
+        function createHearts() {
+            for(let i=0; i<25; i++){
+                let h = document.createElement("div");
+                h.className = "heart";
+                h.innerHTML = i % 2 === 0 ? "💜" : "❤️";
+                h.style.left = Math.random() * 100 + "%";
+                h.style.top = "0px";
+                h.style.fontSize = (15 + Math.random() * 20) + "px";
+                h.style.animationDuration = (6 + Math.random() * 5) + "s";
+                h.style.animationDelay = (Math.random() * 5) + "s";
+                document.body.appendChild(h);
+            }
+        }
+        
+        window.onload = createHearts;
+    </script>
+
+</body>
+</html>
